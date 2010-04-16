@@ -10,13 +10,13 @@ use utf8;
 eval 'use JSON 2.12';
 plan skip_all => 'Install JSON 2.12 or later to run this test' if ($@);
 
-plan tests => 7;
+plan tests => 10;
 
 use_ok 'Catalyst::Test', 'Test::Serialize', 'Catalyst::Action::Serialize::JSON';
 
 my $json = JSON->new->utf8;
 
-for ('text/javascript','application/x-javascript','application/javascript') {
+for ('text/javascript','application/x-javascript','application/javascript','application/javascript-args') {
     my $t = Test::Rest->new('content_type' => $_);
     my $monkey_template = { monkey => 'likes chicken!' };
 
@@ -25,6 +25,8 @@ for ('text/javascript','application/x-javascript','application/javascript') {
 
     my ($json_param) = $mres->content =~ /^omnivore\((.*)?\);$/;
     is_deeply($json->decode($json_param), $monkey_template, "GET returned the right data");
+    ok( $mres->content =~ /omnivore\(\{\n/, "JSONP/JSON can be pretty") if ($_ =~ /-args$/);
 }
+
 
 1;

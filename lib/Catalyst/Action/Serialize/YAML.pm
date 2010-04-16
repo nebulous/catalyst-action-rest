@@ -11,7 +11,11 @@ $VERSION = eval $VERSION;
 
 sub execute {
     my $self = shift;
-    my ( $controller, $c ) = @_;
+    my ( $controller, $c, $sarg ) = @_;
+    $sarg||={};
+    foreach my $arg (keys %$sarg) {
+      eval '$YAML::Syck::'.$arg.' = $sarg->{$arg};';
+    }
 
     my $stash_key = (
             $controller->{'serialize'} ?

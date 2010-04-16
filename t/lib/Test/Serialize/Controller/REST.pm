@@ -11,7 +11,9 @@ __PACKAGE__->config(
     'map'       => {
         'text/html'          => 'YAML::HTML',
         'text/xml'           => 'XML::Simple',
+        'text/xml-args'      => ['XML::Simple', { NoAttr=>1 }],
         'text/x-yaml'        => 'YAML',
+        'text/x-yaml-args'   => ['YAML', { Headless=>1 }],
         'application/json'   => 'JSON',
         'text/x-json'        => 'JSON',
         'text/x-data-dumper' => [ 'Data::Serializer', 'Data::Dumper' ],
@@ -30,6 +32,7 @@ __PACKAGE__->config(
         'text/javascript', => 'JSONP',
         'application/x-javascript' => 'JSONP',
         'application/javascript' => 'JSONP',
+        'application/javascript-args' => ['JSONP',{ pretty=>1 }],
     },
 );
 

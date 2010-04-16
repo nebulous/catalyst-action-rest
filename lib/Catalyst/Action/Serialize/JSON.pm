@@ -16,12 +16,19 @@ has encoder => (
 
 sub _build_encoder {
    my $self = shift;
-   return JSON->new->utf8->convert_blessed;
+   my $args = $self->{_sarg} || {};
+
+   map { $args->{$_}=1 unless defined($args->{$_}) } qw/utf8 convert_blessed/;
+
+   my $enc = JSON->new;
+   foreach my $flag (keys %$args) { $enc->$flag($args->{$flag}) }
+   return $enc;
 }
 
 sub execute {
     my $self = shift;
-    my ( $controller, $c ) = @_;
+    my ( $controller, $c, $sarg ) = @_;
+    $self->{_sarg} = $sarg;
 
     my $stash_key = (
             $controller->{'serialize'} ?

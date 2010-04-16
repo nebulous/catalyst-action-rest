@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::More tests => 7;
 use FindBin;
 
 use lib ("$FindBin::Bin/lib", "$FindBin::Bin/../lib");
@@ -19,10 +19,16 @@ SKIP: {
     my $monkey_template = {
         monkey => 'likes chicken!',
     };
+
     my $mres = request($t->get(url => '/monkey_get'));
     ok( $mres->is_success, 'GET the monkey succeeded' );
     my $output = $xs->XMLin($mres->content);
     is_deeply($xs->XMLin($mres->content)->{'data'}, $monkey_template, "GET returned the right data");
+
+    my $targs = Test::Rest->new('content_type'=>'text/xml-args');
+    my $tmres = request($targs->get(url => '/monkey_get'));
+    ok( $tmres->is_success, 'GET the monkey with args succeeded' );
+    ok( $tmres->content =~ /<monkey>likes chicken!<\/monkey>/s, 'XML::Simple arguments work' );
 
     my $post_data = {
         'sushi' => 'is good for monkey',

@@ -10,7 +10,7 @@ $VERSION = eval $VERSION;
 
 sub execute {
     my $self = shift;
-    my ( $controller, $c ) = @_;
+    my ( $controller, $c, $sarg ) = @_;
 
     eval {
         require XML::Simple
@@ -20,7 +20,12 @@ sub execute {
             if $c->debug;
         return;
     }
-    my $xs = XML::Simple->new(ForceArray => 0,);
+    my $conf = $controller->{serialize} || {};
+
+    use Data::Dumper; print STDERR Dumper($controller->{'map'},$sarg);
+    $sarg||={};
+    $sarg->{ForceArray}||='0';
+    my $xs = XML::Simple->new( %$sarg );
 
     my $stash_key = (
             $controller->{'serialize'} ?

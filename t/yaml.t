@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 5; 
+use Test::More tests => 7;
 use FindBin;
 
 use lib ("$FindBin::Bin/lib", "$FindBin::Bin/../lib");
@@ -22,6 +22,12 @@ SKIP: {
     my $mres = request($t->get(url => '/monkey_get'));
     ok( $mres->is_success, 'GET the monkey succeeded' );
     is_deeply(YAML::Syck::Load($mres->content), $monkey_template, "GET returned the right data");
+
+    my $targs = Test::Rest->new('content_type' => 'text/x-yaml-args');
+    my $tmres = request($targs->get(url => '/monkey_get'));
+    ok( $tmres->is_success,'GET the monkey with args succeeded' );
+    ok( $tmres->content !~ /^---/, 'YAML::Syck argument passing works' );
+
 
     my $post_data = {
         'sushi' => 'is good for monkey',
