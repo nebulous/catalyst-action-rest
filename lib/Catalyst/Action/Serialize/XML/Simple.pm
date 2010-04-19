@@ -22,7 +22,6 @@ sub execute {
     }
     my $conf = $controller->{serialize} || {};
 
-    use Data::Dumper; print STDERR Dumper($controller->{'map'},$sarg);
     $sarg||={};
     $sarg->{ForceArray}||='0';
     my $xs = XML::Simple->new( %$sarg );
